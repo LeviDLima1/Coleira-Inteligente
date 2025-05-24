@@ -3,14 +3,22 @@ import { View, Text, TextInput, TouchableOpacity, Image, ImageBackground } from 
 import { router } from 'expo-router';
 import { styles } from './styles';
 
+export const BackButtonLogin = () => {
+  return (
+    <TouchableOpacity onPress={() => router.back()} style={styles.buttonBack}>
+      <Text style={styles.buttonBackText}>Voltar</Text>
+    </TouchableOpacity>
+  );
+};
+
 export default function LoginUser() {
   const [email, setEmail] = useState('');
   const [senha, setSenha] = useState('');
 
   return (
     <ImageBackground source={require('../../../assets/Backgoundlogin.png')} style={styles.bg} resizeMode="cover">
+      <BackButtonLogin />
       <View style={styles.container}>
-        
         <View style={styles.form}>
           <Image source={require('../../../assets/Decoration-Paw.png')} style={styles.paws} resizeMode="contain" />
           <Text style={styles.title}>PetTracker</Text>

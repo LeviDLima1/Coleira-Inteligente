@@ -82,4 +82,20 @@ export const styles = StyleSheet.create({
       letterSpacing: 1,
       fontFamily: 'Jua_400Regular',
     },
+    buttonBack: {
+      position: 'absolute',
+      top: 60,
+      left: 30,
+      backgroundColor: '#f5f5f5',
+      borderRadius: 8,
+      paddingVertical: 10,
+      paddingHorizontal: 12,
+      alignItems: 'center',
+      
+    },
+    buttonBackText: {
+      color: '#7B3FA0',
+      fontSize: 20,
+      fontFamily: 'Jua_400Regular',
+    },
   });

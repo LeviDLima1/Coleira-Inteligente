@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ImageBackground } from 'react-native';
 import { router } from 'expo-router';
 import { styles } from './styles';
+import { BackButtonLogin } from '../LoginUser';
 
 export default function RegisterUser() {
   const [nome, setNome] = useState('');
@@ -11,6 +12,7 @@ export default function RegisterUser() {
 
   return (
     <ImageBackground source={require('../../../assets/Backgoundlogin.png')} style={styles.bg} resizeMode="cover">
+      <BackButtonLogin />
       <View style={styles.container}>
         <View style={styles.form}>
           <Image source={require('../../../assets/Decoration-Paw.png')} resizeMode="contain" />
