@@ -1,7 +1,6 @@
-import RegisterUser from "@/components/Page/RegisterUser";
+import RegisterUser from '../components/Page/RegisterUser';
 
-
-export default function RegisterUserRender() {
-    return <RegisterUser />
+export default function RegisterUserScreen() {
+  return <RegisterUser />;
 }
 
