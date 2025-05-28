@@ -2,38 +2,35 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ImageBackground, ActivityIndicator, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { styles } from './styles';
-import { BackButtonLogin } from '../LoginUser';
-import { useAuth } from '../../../contexts/AuthContext';
+import { BackButtonLogin } from '../LoginUser'
+import api from '../../../services/api';
 
 export default function RegisterUser() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { registrar } = useAuth();
 
   const handleRegister = async () => {
-    if (!name || !email || !password) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos');
-      return;
-    }
-
-    if (password.length < 8) {
-      Alert.alert('Erro', 'A senha deve ter pelo menos 8 caracteres');
-      return;
-    }
-
     try {
-      setLoading(true);
-      await registrar({ name, email, password });
-      Alert.alert('Sucesso', 'Cadastro realizado com sucesso!');
-      router.push('/LoginUser');
-    } catch (erro: any) {
-      Alert.alert('Erro', erro.erro || 'Erro ao realizar cadastro');
+        setLoading(true);
+        console.log('Enviando dados:', { name, email, password }); // Log para debug
+        
+        await api.post('/users/register', {
+            name,
+            email,
+            password
+        });
+
+        Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!');
+        router.push('/LoginUser');
+    } catch (error: any) {
+        console.error('Erro completo:', error); // Log detalhado do erro
+        Alert.alert('Erro', error.response?.data?.error || 'Erro ao cadastrar usuário');
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
-  };
+};
 
   return (
     <ImageBackground source={require('../../../assets/Backgoundlogin.png')} style={styles.bg} resizeMode="cover">
@@ -83,8 +80,8 @@ export default function RegisterUser() {
 
           <TouchableOpacity 
             style={[styles.button, loading && styles.buttonDisabled]} 
-            onPress={handleRegister}
             disabled={loading}
+            onPress={handleRegister}
           >
             {loading ? (
               <ActivityIndicator color="#FFF" />

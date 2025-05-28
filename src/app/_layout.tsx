@@ -1,5 +1,5 @@
 import { Stack } from 'expo-router';
-import { AuthProvider } from '../contexts/AuthContext';
+import { colors } from '@/styles/colors';
 
 import { 
     useFonts, 
@@ -19,13 +19,11 @@ export default function Layout() {
     }
 
     return (
-        <AuthProvider>
-            <Stack
-                screenOptions={{
-                    headerShown: false,
-                    contentStyle: { backgroundColor: '#fff' }
-                }}
-            />
-        </AuthProvider>
+        <Stack
+            screenOptions={{
+                headerShown: false,
+                contentStyle: { backgroundColor: colors.gray[100] }
+            }}
+        />
     );
 }

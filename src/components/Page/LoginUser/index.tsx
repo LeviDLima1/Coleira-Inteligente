@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ImageBackground, ActivityIndicator, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { styles } from './styles';
-import { useAuth } from '../../../contexts/AuthContext';
 
 export const BackButtonLogin = () => {
   return (
@@ -16,24 +15,6 @@ export default function LoginUser() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
-
-  const handleLogin = async () => {
-    if (!email || !password) {
-      Alert.alert('Erro', 'Por favor, preencha todos os campos');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      await login(email, password);
-      router.push('/Home');
-    } catch (erro: any) {
-      Alert.alert('Erro', erro.erro || 'Erro ao fazer login');
-    } finally {
-      setLoading(false);
-    }
-  };
 
   return (
     <ImageBackground source={require('../../../assets/Backgoundlogin.png')} style={styles.bg} resizeMode="cover">
@@ -72,7 +53,6 @@ export default function LoginUser() {
 
           <TouchableOpacity 
             style={[styles.button, loading && styles.buttonDisabled]} 
-            onPress={handleLogin}
             disabled={loading}
           >
             {loading ? (

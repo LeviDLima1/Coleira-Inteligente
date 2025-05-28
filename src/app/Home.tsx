@@ -1,33 +1,29 @@
-import { useEffect } from 'react';
-import { View, Text, TouchableOpacity } from 'react-native';
-import { router } from 'expo-router';
-import { useAuth } from '../contexts/AuthContext';
+import { useState } from 'react';
+import { Header } from '@/components/header';
+import { Sliders } from '@/components/Page/HomePage/sliders';
+import NavigationMapButton from '@/components/Page/HomePage/navigationMapButton';
+import { View } from 'react-native';
+import PetCard from '@/components/Page/HomePage/PetCard';
+import SideBar from '@/components/Page/HomePage/SideBar';
 
 export default function HomeScreen() {
-  const { logout } = useAuth();
+  const [isSideBarVisible, setIsSideBarVisible] = useState(false);
 
-  const handleLogout = async () => {
-    try {
-      await logout();
-      router.replace('/LoginUser');
-    } catch (erro) {
-      console.error('Erro ao fazer logout:', erro);
-    }
+  const handleOpenSideBar = () => {
+    setIsSideBarVisible(true);
+  };
+
+  const handleCloseSideBar = () => {
+    setIsSideBarVisible(false);
   };
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text style={{ fontSize: 24, marginBottom: 20 }}>Bem-vindo à Home</Text>
-      <TouchableOpacity
-        onPress={handleLogout}
-        style={{
-          backgroundColor: '#4CAF50',
-          padding: 15,
-          borderRadius: 8,
-        }}
-      >
-        <Text style={{ color: '#FFF', fontSize: 16 }}>Sair</Text>
-      </TouchableOpacity>
+    <View>
+      <Header onMenuPress={handleOpenSideBar} />
+      <Sliders />
+      <PetCard />
+      <NavigationMapButton />
+      <SideBar visible={isSideBarVisible} onClose={handleCloseSideBar} />
     </View>
   );
 } 
