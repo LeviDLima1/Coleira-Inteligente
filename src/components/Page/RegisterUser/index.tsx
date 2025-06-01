@@ -16,7 +16,7 @@ export default function RegisterUser() {
         setLoading(true);
         console.log('Enviando dados:', { name, email, password }); // Log para debug
         
-        await api.post('/users/register', {
+        await api.post('/users', {
             name,
             email,
             password

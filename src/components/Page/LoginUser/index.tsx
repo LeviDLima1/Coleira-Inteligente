@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, TouchableOpacity, Image, ImageBackground, ActivityIndicator, Alert } from 'react-native';
 import { router } from 'expo-router';
 import { styles } from './styles';
+import api from '../../../services/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const BackButtonLogin = () => {
   return (
@@ -15,6 +17,36 @@ export default function LoginUser() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  const handleLogin = async () => {
+    if (!email || !password) {
+      Alert.alert('Erro', 'Por favor, preencha todos os campos');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      const response = await api.post('/login', {
+        email,
+        password
+      });
+
+      // Salva o token e os dados do usuário
+      await AsyncStorage.setItem('token', response.data.token);
+      await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
+
+      Alert.alert('Sucesso', 'Login realizado com sucesso!');
+      router.push('/Home');
+    } catch (error: any) {
+      console.error('Erro ao fazer login:', error);
+      Alert.alert(
+        'Erro',
+        error.response?.data?.error || 'Erro ao fazer login. Tente novamente.'
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <ImageBackground source={require('../../../assets/Backgoundlogin.png')} style={styles.bg} resizeMode="cover">
@@ -54,6 +86,7 @@ export default function LoginUser() {
           <TouchableOpacity 
             style={[styles.button, loading && styles.buttonDisabled]} 
             disabled={loading}
+            onPress={handleLogin}
           >
             {loading ? (
               <ActivityIndicator color="#FFF" />
