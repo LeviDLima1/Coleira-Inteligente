@@ -2,50 +2,50 @@ import React from 'react';
 import { View, Text, TouchableOpacity, Animated, Dimensions, ScrollView, StyleSheet } from 'react-native';
 import { Ionicons, MaterialIcons, Feather, FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
-import { useRouter } from 'expo-router';
+import { router, useRouter } from 'expo-router';
 
 const { width } = Dimensions.get('window');
-
-const sideBarSections = [
-  {
-    title: "Serviços",
-    items: [
-      { icon: <Ionicons name="home-outline" size={22} color="#7B3FA0" />, label: "Início / Dashboard" },
-      { icon: <Ionicons name="map-outline" size={22} color="#7B3FA0" />, label: "Mapa de Rastreamento" },
-      { icon: <FontAwesome5 name="dog" size={22} color="#7B3FA0" />, label: "Meus Pets" },
-      { icon: <Feather name="credit-card" size={22} color="#7B3FA0" />, label: "Meus Planos" },
-      { icon: <MaterialIcons name="add-shopping-cart" size={22} color="#7B3FA0" />, label: "Contratar Plano" },
-    ]
-  },
-  {
-    title: "Funcionalidades",
-    items: [
-      { icon: <MaterialIcons name="center-focus-weak" size={22} color="#7B3FA0" />, label: "Área Segura" },
-      { icon: <Ionicons name="time-outline" size={22} color="#7B3FA0" />, label: "Histórico de Localizações" },
-      { icon: <MaterialIcons name="warning-amber" size={22} color="#7B3FA0" />, label: "Alertas de Fuga" },
-    ]
-  },
-  {
-    title: "Comunidade / Colaboração",
-    items: [
-      { icon: <FontAwesome5 name="search-location" size={22} color="#7B3FA0" />, label: "Pets Perdidos Próximos" },
-      { icon: <FontAwesome5 name="search" size={22} color="#7B3FA0" />, label: "Encontrei um Pet" },
-      { icon: <FontAwesome name="comments-o" size={22} color="#7B3FA0" />, label: "Comunidade / Fórum" },
-    ]
-  },
-  {
-    title: "Conta & Suporte",
-    items: [
-      { icon: <Ionicons name="person-outline" size={22} color="#7B3FA0" />, label: "Minha Conta" },
-      { icon: <Ionicons name="notifications-outline" size={22} color="#7B3FA0" />, label: "Notificações" },
-      { icon: <Feather name="phone-call" size={22} color="#7B3FA0" />, label: "Suporte / Ajuda" },
-    ]
-  }
-];
 
 export default function SideBar({ visible, onClose }: { visible: boolean, onClose: () => void }) {
   const [slideAnim] = React.useState(new Animated.Value(width));
   const router = useRouter();
+
+  const sideBarSections = [
+    {
+      title: "Serviços",
+      items: [
+        { icon: <Ionicons name="home-outline" size={22} color="#7B3FA0" />, label: "Início / Dashboard" },
+        { icon: <Ionicons name="map-outline" size={22} color="#7B3FA0" />, label: "Mapa de Rastreamento" },
+        { icon: <FontAwesome5 name="dog" size={22} color="#7B3FA0" />, label: "Meus Pets" },
+        { icon: <Feather name="credit-card" size={22} color="#7B3FA0" />, label: "Meus Planos" },
+        { icon: <MaterialIcons name="add-shopping-cart" size={22} color="#7B3FA0" />, label: "Contratar Plano" },
+      ]
+    },
+    {
+      title: "Funcionalidades",
+      items: [
+        { icon: <MaterialIcons name="center-focus-weak" size={22} color="#7B3FA0" />, label: "Área Segura" },
+        { icon: <Ionicons name="time-outline" size={22} color="#7B3FA0" />, label: "Histórico de Localizações" },
+        { icon: <MaterialIcons name="warning-amber" size={22} color="#7B3FA0" />, label: "Alertas de Fuga" },
+      ]
+    },
+    {
+      title: "Comunidade / Colaboração",
+      items: [
+        { icon: <FontAwesome5 name="search-location" size={22} color="#7B3FA0" />, label: "Pets Perdidos Próximos" },
+        { icon: <FontAwesome5 name="search" size={22} color="#7B3FA0" />, label: "Encontrei um Pet" },
+        { icon: <FontAwesome name="comments-o" size={22} color="#7B3FA0" />, label: "Comunidade / Fórum" },
+      ]
+    },
+    {
+      title: "Conta & Suporte",
+      items: [
+        { icon: <Ionicons name="person-outline" size={22} color="#7B3FA0" />, label: "Minha Conta", onPress: () => { router.push("/AccountConfigPage"); onClose(); } },
+        { icon: <Ionicons name="notifications-outline" size={22} color="#7B3FA0" />, label: "Notificações" },
+        { icon: <Feather name="phone-call" size={22} color="#7B3FA0" />, label: "Suporte / Ajuda" },
+      ]
+    }
+  ];
 
   React.useEffect(() => {
     if (visible) {
@@ -108,7 +108,12 @@ export default function SideBar({ visible, onClose }: { visible: boolean, onClos
             <React.Fragment key={section.title}>
               <Text style={styles.sectionTitle}>{section.title}</Text>
               {section.items.map((item) => (
-                <SideBarItem key={item.label} icon={item.icon} label={item.label} />
+                <SideBarItem 
+                  key={item.label} 
+                  icon={item.icon} 
+                  label={item.label} 
+                  onPress={item.onPress}
+                />
               ))}
             </React.Fragment>
           ))}
@@ -122,11 +127,11 @@ export default function SideBar({ visible, onClose }: { visible: boolean, onClos
   );
 }
 
-function SideBarItem({ icon, label }: { icon: React.ReactNode, label: string }) {
+function SideBarItem({ icon, label, onPress }: { icon: React.ReactNode, label: string, onPress?: () => void }) {
   return (
-    <View style={styles.itemRow}>
+    <TouchableOpacity style={styles.itemRow} onPress={onPress}>
       {icon}
       <Text style={styles.itemLabel}>{label}</Text>
-    </View>
+    </TouchableOpacity>
   );
 }
