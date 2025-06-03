@@ -114,4 +114,38 @@ export const styles = StyleSheet.create({
     marginTop: -2,
     fontFamily: 'Jua_400Regular',
   },
+  userInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    padding: 8,
+  },
+  userPhoto: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: '#E0E0E0',
+    resizeMode: 'contain',
+    padding: 8,
+  },
+  userTextContainer: {
+    flex: 1,
+    marginLeft: 12,
+  },
+  welcomeText: {
+    fontSize: 14,
+    color: '#666',
+    fontFamily: 'Jua_400Regular',
+  },
+  userName: {
+    fontSize: 16,
+    color: '#333',
+    fontWeight: 'bold',
+    fontFamily: 'Jua_400Regular',
+  },
+  logoutButton: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: '#F0F0F0',
+  },
 });

@@ -4,15 +4,16 @@ import { router } from 'expo-router';
 import api from '../services/api';
 
 interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
+  photo?: string;
 }
 
 interface AuthContextData {
   user: User | null;
   loading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
+  signIn: (userData: User) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -39,29 +40,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
-  async function signIn(email: string, password: string) {
+  async function signIn(userData: User) {
     try {
-      const response = await api.post('/login', { email, password });
-      const { token, user: userData } = response.data;
-
-      await AsyncStorage.setItem('token', token);
       await AsyncStorage.setItem('user', JSON.stringify(userData));
-
       setUser(userData);
-      router.push('/Home');
     } catch (error) {
+      console.error('Erro ao salvar dados do usuário:', error);
       throw error;
     }
   }
 
   async function signOut() {
     try {
-      await AsyncStorage.removeItem('token');
       await AsyncStorage.removeItem('user');
+      await AsyncStorage.removeItem('token');
       setUser(null);
-      router.push('/LoginUser');
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
+      throw error;
     }
   }
 

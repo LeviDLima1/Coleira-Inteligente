@@ -4,6 +4,7 @@ import { router } from 'expo-router';
 import { styles } from './styles';
 import api from '../../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../../../contexts/AuthContext';
 
 export const BackButtonLogin = () => {
   return (
@@ -17,6 +18,7 @@ export default function LoginUser() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const { signIn } = useAuth();
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -33,7 +35,7 @@ export default function LoginUser() {
 
       // Salva o token e os dados do usuário
       await AsyncStorage.setItem('token', response.data.token);
-      await AsyncStorage.setItem('user', JSON.stringify(response.data.user));
+      await signIn(response.data.user);
 
       Alert.alert('Sucesso', 'Login realizado com sucesso!');
       router.push('/Home');

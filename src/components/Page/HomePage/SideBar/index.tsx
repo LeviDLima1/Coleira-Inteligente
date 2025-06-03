@@ -1,14 +1,16 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Animated, Dimensions, ScrollView, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, Dimensions, ScrollView, StyleSheet, Image } from 'react-native';
 import { Ionicons, MaterialIcons, Feather, FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 import { router, useRouter } from 'expo-router';
+import { useAuth } from '../../../../contexts/AuthContext';
 
 const { width } = Dimensions.get('window');
 
 export default function SideBar({ visible, onClose }: { visible: boolean, onClose: () => void }) {
   const [slideAnim] = React.useState(new Animated.Value(width));
   const router = useRouter();
+  const { user, signOut } = useAuth();
 
   const sideBarSections = [
     {
@@ -63,6 +65,16 @@ export default function SideBar({ visible, onClose }: { visible: boolean, onClos
     }
   }, [visible]);
 
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      onClose();
+      router.push('/LoginUser');
+    } catch (error) {
+      console.error('Erro ao fazer logout:', error);
+    }
+  };
+
   if (!visible) return null;
 
   return (
@@ -94,13 +106,31 @@ export default function SideBar({ visible, onClose }: { visible: boolean, onClos
         <ScrollView>
           {/* Top Card */}
           <View style={styles.topCard}>
-            <View>
-              <Text style={styles.topTitle}>Olá, PetTracker</Text>
-              <Text style={styles.topSubtitle}>Já possui conta ou quer se cadastrar?</Text>
-            </View>
-            <TouchableOpacity style={styles.topButton} onPress={() => { router.push('/LoginUser'); onClose(); }}>
-              <Text style={styles.topButtonText}>Entrar</Text>
-            </TouchableOpacity>
+            {user ? (
+              <View style={styles.userInfo}>
+                <Image
+                  source={user.photo ? { uri: user.photo } : require('../../../../assets/Decoration-Paw.png')}
+                  style={styles.userPhoto}
+                />
+                <View style={styles.userTextContainer}>
+                  <Text style={styles.welcomeText}>Bem-vindo(a),</Text>
+                  <Text style={styles.userName}>{user.name}</Text>
+                </View>
+                <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+                  <Ionicons name="log-out-outline" size={24} color="#7B3FA0" />
+                </TouchableOpacity>
+              </View>
+            ) : (
+              <>
+                <View>
+                  <Text style={styles.topTitle}>Olá, PetTracker</Text>
+                  <Text style={styles.topSubtitle}>Já possui conta ou quer se cadastrar?</Text>
+                </View>
+                <TouchableOpacity style={styles.topButton} onPress={() => { router.push('/LoginUser'); onClose(); }}>
+                  <Text style={styles.topButtonText}>Entrar</Text>
+                </TouchableOpacity>
+              </>
+            )}
           </View>
 
           {/* Renderização dinâmica das seções e itens */}

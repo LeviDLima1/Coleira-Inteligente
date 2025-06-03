@@ -1,6 +1,6 @@
 import { Stack } from 'expo-router';
 import { colors } from '@/styles/colors';
-import { AuthProvider } from '@/contexts/AuthContext';
+import { AuthProvider } from '../contexts/AuthContext';
 
 import { 
     useFonts, 
