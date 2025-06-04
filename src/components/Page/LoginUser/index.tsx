@@ -28,14 +28,13 @@ export default function LoginUser() {
 
     try {
       setLoading(true);
-      const response = await api.post('/login', {
+      const response = await api.post('/users/login', {
         email,
         password
       });
 
       // Salva o token e os dados do usuário
-      await AsyncStorage.setItem('token', response.data.token);
-      await signIn(response.data.user);
+      await signIn(response.data.user, response.data.token);
 
       Alert.alert('Sucesso', 'Login realizado com sucesso!');
       router.push('/Home');

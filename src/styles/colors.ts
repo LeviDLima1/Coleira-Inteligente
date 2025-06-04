@@ -1,6 +1,7 @@
 export const colors = {
     white: '#FFFFFF',
     gray: {
+        50: '#f6f8fd',
         100: '#F3F4F6',
         200: '#E5E7EB',
         300: '#D1D5DB',
@@ -12,6 +13,7 @@ export const colors = {
         900: '#111827',
     },
     purple: {
+        400: '#800080',
         500: '#642B7E',
         600: '#522366',
         700: '#411C52',

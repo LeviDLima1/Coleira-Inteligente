@@ -13,7 +13,7 @@ interface User {
 interface AuthContextData {
   user: User | null;
   loading: boolean;
-  signIn: (userData: User) => Promise<void>;
+  signIn: (userData: User, token: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -29,8 +29,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   async function loadStoredData() {
     try {
-      const storedUser = await AsyncStorage.getItem('user');
-      if (storedUser) {
+      const [storedUser, storedToken] = await Promise.all([
+        AsyncStorage.getItem('user'),
+        AsyncStorage.getItem('token')
+      ]);
+
+      if (storedUser && storedToken) {
         setUser(JSON.parse(storedUser));
       }
     } catch (error) {
@@ -40,9 +44,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
-  async function signIn(userData: User) {
+  async function signIn(userData: User, token: string) {
     try {
-      await AsyncStorage.setItem('user', JSON.stringify(userData));
+      await Promise.all([
+        AsyncStorage.setItem('user', JSON.stringify(userData)),
+        AsyncStorage.setItem('token', token)
+      ]);
       setUser(userData);
     } catch (error) {
       console.error('Erro ao salvar dados do usuário:', error);
@@ -52,8 +59,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   async function signOut() {
     try {
-      await AsyncStorage.removeItem('user');
-      await AsyncStorage.removeItem('token');
+      await Promise.all([
+        AsyncStorage.removeItem('user'),
+        AsyncStorage.removeItem('token')
+      ]);
       setUser(null);
     } catch (error) {
       console.error('Erro ao fazer logout:', error);
