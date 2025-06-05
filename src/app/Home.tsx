@@ -7,6 +7,8 @@ import PetCard from '@/components/Page/HomePage/PetCard';
 import SideBar from '@/components/Page/HomePage/SideBar';
 import api from '@/services/api';
 import { colors } from '@/styles/colors';
+import { useFocusEffect } from 'expo-router';
+import React from 'react';
 
 interface Pet {
   id: number;
@@ -55,9 +57,11 @@ export default function HomeScreen() {
     }
   };
 
-  useEffect(() => {
-    loadPets();
-  }, []);
+  useFocusEffect(
+    React.useCallback(() => {
+      loadPets();
+    }, [])
+  );
 
   return (
     <View style={styles.container}>

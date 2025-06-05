@@ -276,7 +276,7 @@ const MapPage: React.FC = () => {
               <Text style={styles.petName}>{petDetails.nome}</Text>
               <Text style={styles.petDetail}>Tipo: {petDetails.tipo}</Text>
               <Text style={styles.petDetail}>Raça: {petDetails.raca}</Text>
-              <Text style={styles.petDetail}>Idade: {petDetails.idade} meses</Text>
+              <Text style={styles.petDetail}>Idade: {petDetails.idade} ano</Text>
               {petLocation?.timestamp && (
                 <Text style={styles.petDetail}>Última atualização: {new Date(petLocation.timestamp).toLocaleString()}</Text>
               )}
