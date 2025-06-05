@@ -5,82 +5,63 @@ export const styles = StyleSheet.create({
     card: {
         backgroundColor: colors.white,
         borderRadius: 16,
-        padding: 16,
-        width: '90%',
-        position: 'relative',
-        marginTop: 20,
-        marginHorizontal: 'auto',
-        borderWidth: 1,
-        borderColor: colors.gray[200],
-        shadowColor: colors.gray[900],
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-        elevation: 2,
+        padding: 16, // Padding interno do card
+        width: '100%', // Para ser usado dentro da ScrollView com gap
+        marginTop: 40, 
+        elevation: 4, // Sombra para Android
     },
-    slideContainer: {
-        flexGrow: 0,
-        paddingHorizontal: 10,
-        marginVertical: 8,
+    slideContainer: { // Estilo para a ScrollView que envolve os cards
+        // paddingHorizontal e gap definidos no componente
     },
-    row: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginBottom: 16,
+    petInfoRow: { // Contêiner para a imagem e texto do pet
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 12, // Espaço entre a info do pet e a linha de ícones
     },
-    title: {
-        fontSize: 24,
-        color: colors.purple[700],
-        fontFamily: 'Jua_400Regular',
-        marginLeft: 12,
-    },
-    avatarContainer: {
-        borderWidth: 2,
-        borderColor: colors.purple[400],
-        borderRadius: 40,
-        padding: 2,
+    avatarContainer: { // Contêiner para a imagem redonda
+        width: 64, // Tamanho do círculo
+        height: 64,
+        borderRadius: 32, // Metade do tamanho para ser redondo
         marginRight: 16,
-        backgroundColor: colors.white,
-        shadowColor: colors.purple[600],
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 1,
+        backgroundColor: colors.white, // Fundo branco
+        overflow: 'hidden', // Corta a imagem no formato do contêiner
+        borderWidth: 2, // Adiciona uma borda fina
+        borderColor: colors.purple[400], // Cor da borda
     },
-    avatar: {
-        width: 56,
-        height: 56,
-        borderRadius: 28,
+    avatar: { // A imagem do pet
+        width: '100%', // Preenche o contêiner
+        height: '100%',
     },
-    nome: {
+    petTextContainer: { // Contêiner para o nome e status
+      flex: 1, // Ocupa o espaço restante na linha
+      justifyContent: 'center', // Centraliza verticalmente
+    },
+    nome: { // Nome do pet
         fontSize: 20,
-        color: colors.purple[700],
-        fontFamily: 'Jua_400Regular',
-        marginBottom: 4,
+        fontWeight: 'bold', // Nome em negrito
+        color: colors.purple[800], // Cor do tema
+        marginBottom: 4, // Espaço entre nome e status
     },
-    status: {
-        color: colors.gray[600],
+    status: { // Status da coleira/pet
         fontSize: 14,
-        fontFamily: 'Jua_400Regular',
+        color: colors.green[600], // Cor verde para status positivo
     },
-    iconsRow: {
+    iconsRow: { // Contêiner para os botões de ícone
         flexDirection: 'row',
-        justifyContent: 'space-around',
-        marginTop: 16,
-        paddingTop: 16,
+        justifyContent: 'space-around', // Distribui os ícones
+        paddingTop: 12, // Espaço acima da linha separadora
         borderTopWidth: 1,
-        borderTopColor: colors.gray[200],
-        paddingHorizontal: 16,
+        borderTopColor: colors.gray[200], // Cor da linha separadora
     },
-    iconButton: {
-        backgroundColor: colors.gray[200],
-        borderRadius: 12,
+    iconButton: { // Estilo base dos botões de ícone
+        backgroundColor: 'transparent', // Fundo transparente
+        borderRadius: 24, // Metade do tamanho para ser redondo
+        width: 48, // Tamanho do botão
+        height: 48,
         alignItems: 'center',
         justifyContent: 'center',
-        width: 48,
-        height: 48,
     },
+    // Estilos para o estado vazio do card (mantidos)
     emptyContainer: {
         alignItems: 'center',
         justifyContent: 'center',
@@ -96,7 +77,6 @@ export const styles = StyleSheet.create({
         color: colors.purple[600],
         marginBottom: 16,
         textAlign: 'center',
-        fontFamily: 'Jua_400Regular',
     },
     cadastroButton: {
         backgroundColor: colors.purple[600],
@@ -113,6 +93,5 @@ export const styles = StyleSheet.create({
     cadastroButtonText: {
         color: colors.white,
         fontSize: 16,
-        fontFamily: 'Jua_400Regular',
     },
 });

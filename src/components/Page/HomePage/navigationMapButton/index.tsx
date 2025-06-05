@@ -8,7 +8,7 @@ import { styles } from './styles';
 export default function NavigationMapButton() {
 
   function handlePress() {
-    router.navigate('/MapPage');
+    router.navigate('/map');
   }
 
   return (

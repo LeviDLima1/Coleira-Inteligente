@@ -3,6 +3,7 @@ import { MaterialIcons, Feather } from '@expo/vector-icons';
 import { styles } from "./styles";
 import { router } from "expo-router";
 import { colors } from "@/styles/colors";
+import { AntDesign } from '@expo/vector-icons';
 
 interface Pet {
   id: number;
@@ -11,6 +12,7 @@ interface Pet {
   raca: string;
   idade: number;
   foto: string | null;
+  status?: string;
 }
 
 interface PetSlideProps {
@@ -30,9 +32,17 @@ export default function PetSlide({ pets }: PetSlideProps) {
 
   const handleTrackPet = (petId: number) => {
     router.push({
-      pathname: '/MapPage',
+      pathname: '/map',
       params: { petId }
     });
+  };
+
+  const handleNotifications = (petId: number) => {
+    console.log(`Navegando para notificações do pet ID: ${petId}`);
+  };
+
+  const handleSettings = (petId: number) => {
+    console.log(`Navegando para configurações do pet ID: ${petId}`);
   };
 
   return (
@@ -48,31 +58,37 @@ export default function PetSlide({ pets }: PetSlideProps) {
     >
       {pets.map((pet) => (
         <View key={pet.id} style={[styles.card, { width: cardWidth }]}>
-          <View style={styles.row}>
+          <View style={styles.petInfoRow}>
             <View style={styles.avatarContainer}>
               <Image
                 source={pet.foto ? { uri: pet.foto } : require('../../../../assets/Decoration-Paw.png')}
                 style={styles.avatar}
               />
             </View>
-            <View>
+            <View style={styles.petTextContainer}>
               <Text style={styles.nome}>{pet.nome}</Text>
-              <Text style={styles.status}>{pet.tipo === 'dog' ? 'Cachorro' : 'Gato'} - {pet.raca}</Text>
+              <Text style={styles.status}>{pet.status || 'Status desconhecido'}</Text>
             </View>
           </View>
 
           <View style={styles.iconsRow}>
-            <TouchableOpacity 
+            <TouchableOpacity
               style={styles.iconButton}
-              onPress={() => handleUpdatePet(pet.id)}
+              onPress={() => handleNotifications(pet.id)}
             >
-              <Feather name="edit" size={24} color={colors.purple[600]} />
+              <Feather name="bell" size={24} color={colors.gray[700]} />
             </TouchableOpacity>
-            <TouchableOpacity 
+            <TouchableOpacity
+              style={styles.iconButton}
+              onPress={() => handleSettings(pet.id)}
+            >
+              <Feather name="settings" size={24} color={colors.gray[700]} />
+            </TouchableOpacity>
+            <TouchableOpacity
               style={styles.iconButton}
               onPress={() => handleTrackPet(pet.id)}
             >
-              <MaterialIcons name="location-on" size={24} color={colors.purple[600]} />
+              <MaterialIcons name="my-location" size={24} color={colors.gray[700]} />
             </TouchableOpacity>
           </View>
         </View>
