@@ -14,18 +14,19 @@ export default function RegisterUser() {
   const handleRegister = async () => {
     try {
         setLoading(true);
-        console.log('Enviando dados:', { name, email, password }); // Log para debug
+        console.log('Enviando dados para cadastro:', { name, email, password }); // Log para debug
         
         await api.post('/users', {
             name,
             email,
             password
         });
-
+        console.log('Usuário cadastrado com sucesso!'); // Log para debug
         Alert.alert('Sucesso', 'Usuário cadastrado com sucesso!');
         router.push('/LoginUser');
     } catch (error: any) {
-        console.error('Erro completo:', error); // Log detalhado do erro
+        console.error('Erro ao cadastrar usuário:', error);
+        console.log('Detalhes do erro:', error.response?.data); // Log para debug
         Alert.alert('Erro', error.response?.data?.error || 'Erro ao cadastrar usuário');
     } finally {
         setLoading(false);

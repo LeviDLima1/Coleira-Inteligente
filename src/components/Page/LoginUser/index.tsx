@@ -26,10 +26,12 @@ export default function LoginUser() {
 
     try {
       setLoading(true);
+      console.log('Tentando fazer login com:', { email, password });
       const response = await api.post('/login', {
         email,
         password
       });
+      console.log('Resposta do servidor:', response.data);
 
       // Salva o token e os dados do usuário
       await AsyncStorage.setItem('token', response.data.token);
@@ -39,6 +41,7 @@ export default function LoginUser() {
       router.push('/Home');
     } catch (error: any) {
       console.error('Erro ao fazer login:', error);
+      console.log('Detalhes do erro:', error.response?.data);
       Alert.alert(
         'Erro',
         error.response?.data?.error || 'Erro ao fazer login. Tente novamente.'
