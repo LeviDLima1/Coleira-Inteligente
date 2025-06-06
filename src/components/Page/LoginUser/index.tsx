@@ -5,10 +5,16 @@ import { styles } from './styles';
 import api from '../../../services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../../../contexts/AuthContext';
+import Animated, { useAnimatedStyle, withSpring } from 'react-native-reanimated';
 
 export const BackButtonLogin = () => {
   return (
-    <TouchableOpacity onPress={() => router.back()} style={styles.buttonBack}>
+    <TouchableOpacity
+      onPress={() => router.back()}
+      style={styles.buttonBack}
+      accessibilityLabel="Voltar para a tela anterior"
+      accessibilityRole="button"
+    >
       <Text style={styles.buttonBackText}>Voltar</Text>
     </TouchableOpacity>
   );
@@ -49,6 +55,13 @@ export default function LoginUser() {
     }
   };
 
+  const buttonAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: withSpring(loading ? 0.95 : 1) }],
+      opacity: withSpring(loading ? 0.7 : 1)
+    };
+  });
+
   return (
     <ImageBackground source={require('../../../assets/Backgoundlogin.png')} style={styles.bg} resizeMode="cover">
       <BackButtonLogin />
@@ -67,6 +80,8 @@ export default function LoginUser() {
             autoCapitalize="none"
             keyboardType="email-address"
             editable={!loading}
+            accessibilityLabel="Campo de email para login"
+            accessibilityRole="text"
           />
 
           <Text style={styles.label}>Senha</Text>
@@ -78,23 +93,35 @@ export default function LoginUser() {
             onChangeText={setPassword}
             secureTextEntry
             editable={!loading}
+            accessibilityLabel="Campo de senha para login"
+            accessibilityRole="text"
           />
 
-          <TouchableOpacity onPress={() => router.push('/RegisterUser')} style={styles.registerLinkContainer}>
+          <TouchableOpacity
+            onPress={() => router.push('/RegisterUser')}
+            style={styles.registerLinkContainer}
+            accessibilityLabel="Link para a página de cadastro de usuário"
+            accessibilityRole="link"
+          >
             <Text style={styles.registerLink}>Não possui cadastro? Cadastre-se</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
-            style={[styles.button, loading && styles.buttonDisabled]} 
-            disabled={loading}
-            onPress={handleLogin}
-          >
-            {loading ? (
-              <ActivityIndicator color="#FFF" />
-            ) : (
-              <Text style={styles.buttonText}>Entrar</Text>
-            )}
-          </TouchableOpacity>
+          <Animated.View style={buttonAnimatedStyle}>
+            <TouchableOpacity 
+              style={[styles.button, loading && styles.buttonDisabled]} 
+              disabled={loading}
+              onPress={handleLogin}
+              accessibilityLabel={loading ? "Entrando..." : "Botão entrar"}
+              accessibilityRole="button"
+              accessibilityState={{ busy: loading }}
+            >
+              {loading ? (
+                <ActivityIndicator color="#FFF" />
+              ) : (
+                <Text style={styles.buttonText}>Entrar</Text>
+              )}
+            </TouchableOpacity>
+          </Animated.View>
         </View>
       </View>
     </ImageBackground>

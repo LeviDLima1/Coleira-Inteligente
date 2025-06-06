@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, Animated, Dimensions, ScrollView, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Animated, Dimensions, ScrollView, StyleSheet, Image, AccessibilityRole } from 'react-native';
 import { Ionicons, MaterialIcons, Feather, FontAwesome5, FontAwesome } from '@expo/vector-icons';
 import { styles } from './styles';
 import { router, useRouter } from 'expo-router';
@@ -7,44 +7,54 @@ import { useAuth } from '../../../../contexts/AuthContext';
 
 const { width } = Dimensions.get('window');
 
+// Definindo a interface para os itens do menu lateral
+interface SideBarItemData {
+  icon: React.ReactNode;
+  label: string;
+  onPress?: () => void;
+  accessibilityRole?: AccessibilityRole;
+}
+
 export default function SideBar({ visible, onClose }: { visible: boolean, onClose: () => void }) {
   const [slideAnim] = React.useState(new Animated.Value(width));
   const router = useRouter();
   const { user, signOut } = useAuth();
 
-  const sideBarSections = [
+  // Tipando explicitamente a estrutura sideBarSections
+  const sideBarSections: { title: string; items: SideBarItemData[] }[] = [
     {
       title: "Serviços",
       items: [
-        { icon: <Ionicons name="home-outline" size={22} color="#7B3FA0" />, label: "Início / Dashboard" },
-        { icon: <Ionicons name="map-outline" size={22} color="#7B3FA0" />, label: "Mapa de Rastreamento" },
-        { icon: <FontAwesome5 name="dog" size={22} color="#7B3FA0" />, label: "Meus Pets" },
-        { icon: <Feather name="credit-card" size={22} color="#7B3FA0" />, label: "Meus Planos" },
-        { icon: <MaterialIcons name="add-shopping-cart" size={22} color="#7B3FA0" />, label: "Contratar Plano" },
+        { icon: <Ionicons name="home-outline" size={22} color="#7B3FA0" />, label: "Início / Dashboard", onPress: () => { router.push("/"); onClose(); }, accessibilityRole: 'button' },
+        // Corrigindo erro de tipagem da rota /MapPage com cast any
+        { icon: <Ionicons name="map-outline" size={22} color="#7B3FA0" />, label: "Mapa de Rastreamento", onPress: () => { router.push("/MapPage" as any); onClose(); }, accessibilityRole: 'button' },
+        { icon: <FontAwesome5 name="dog" size={22} color="#7B3FA0" />, label: "Meus Pets", accessibilityRole: 'button' },
+        { icon: <Feather name="credit-card" size={22} color="#7B3FA0" />, label: "Meus Planos", accessibilityRole: 'button' },
+        { icon: <MaterialIcons name="add-shopping-cart" size={22} color="#7B3FA0" />, label: "Contratar Plano", accessibilityRole: 'button' },
       ]
     },
     {
       title: "Funcionalidades",
       items: [
-        { icon: <MaterialIcons name="center-focus-weak" size={22} color="#7B3FA0" />, label: "Área Segura" },
-        { icon: <Ionicons name="time-outline" size={22} color="#7B3FA0" />, label: "Histórico de Localizações" },
-        { icon: <MaterialIcons name="warning-amber" size={22} color="#7B3FA0" />, label: "Alertas de Fuga" },
+        { icon: <MaterialIcons name="center-focus-weak" size={22} color="#7B3FA0" />, label: "Área Segura", accessibilityRole: 'button' },
+        { icon: <Ionicons name="time-outline" size={22} color="#7B3FA0" />, label: "Histórico de Localizações", accessibilityRole: 'button' },
+        { icon: <MaterialIcons name="warning-amber" size={22} color="#7B3FA0" />, label: "Alertas de Fuga", accessibilityRole: 'button' },
       ]
     },
     {
       title: "Comunidade / Colaboração",
       items: [
-        { icon: <FontAwesome5 name="search-location" size={22} color="#7B3FA0" />, label: "Pets Perdidos Próximos" },
-        { icon: <FontAwesome5 name="search" size={22} color="#7B3FA0" />, label: "Encontrei um Pet" },
-        { icon: <FontAwesome name="comments-o" size={22} color="#7B3FA0" />, label: "Comunidade / Fórum" },
+        { icon: <FontAwesome5 name="search-location" size={22} color="#7B3FA0" />, label: "Pets Perdidos Próximos", accessibilityRole: 'button' },
+        { icon: <FontAwesome5 name="search" size={22} color="#7B3FA0" />, label: "Encontrei um Pet", accessibilityRole: 'button' },
+        { icon: <FontAwesome name="comments-o" size={22} color="#7B3FA0" />, label: "Comunidade / Fórum", accessibilityRole: 'button' },
       ]
     },
     {
       title: "Conta & Suporte",
       items: [
-        { icon: <Ionicons name="person-outline" size={22} color="#7B3FA0" />, label: "Minha Conta", onPress: () => { router.push("/AccountConfigPage"); onClose(); } },
-        { icon: <Ionicons name="notifications-outline" size={22} color="#7B3FA0" />, label: "Notificações" },
-        { icon: <Feather name="phone-call" size={22} color="#7B3FA0" />, label: "Suporte / Ajuda" },
+        { icon: <Ionicons name="person-outline" size={22} color="#7B3FA0" />, label: "Minha Conta", onPress: () => { router.push("/AccountConfigPage"); onClose(); }, accessibilityRole: 'button' },
+        { icon: <Ionicons name="notifications-outline" size={22} color="#7B3FA0" />, label: "Notificações", accessibilityRole: 'button' },
+        { icon: <Feather name="phone-call" size={22} color="#7B3FA0" />, label: "Suporte / Ajuda", accessibilityRole: 'button' },
       ]
     }
   ];
@@ -84,6 +94,8 @@ export default function SideBar({ visible, onClose }: { visible: boolean, onClos
         style={[StyleSheet.absoluteFillObject, { backgroundColor: 'rgba(0,0,0,0.2)', zIndex: 101 }]}
         onPress={onClose}
         activeOpacity={1}
+        accessibilityLabel="Fechar menu lateral"
+        accessibilityRole="button"
       />
       {/* SideBar alinhado à direita */}
       <Animated.View
@@ -116,7 +128,12 @@ export default function SideBar({ visible, onClose }: { visible: boolean, onClos
                   <Text style={styles.welcomeText}>Bem-vindo(a),</Text>
                   <Text style={styles.userName}>{user.name}</Text>
                 </View>
-                <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+                <TouchableOpacity 
+                  style={styles.logoutButton}
+                  onPress={handleLogout}
+                  accessibilityLabel="Sair da conta"
+                  accessibilityRole="button"
+                >
                   <Ionicons name="log-out-outline" size={24} color="#7B3FA0" />
                 </TouchableOpacity>
               </View>
@@ -126,7 +143,12 @@ export default function SideBar({ visible, onClose }: { visible: boolean, onClos
                   <Text style={styles.topTitle}>Olá, PetTracker</Text>
                   <Text style={styles.topSubtitle}>Já possui conta ou quer se cadastrar?</Text>
                 </View>
-                <TouchableOpacity style={styles.topButton} onPress={() => { router.push('/LoginUser'); onClose(); }}>
+                <TouchableOpacity 
+                  style={styles.topButton}
+                  onPress={() => { router.push('/LoginUser'); onClose(); }}
+                  accessibilityLabel="Ir para a página de login ou cadastro"
+                  accessibilityRole="button"
+                >
                   <Text style={styles.topButtonText}>Entrar</Text>
                 </TouchableOpacity>
               </>
@@ -143,13 +165,21 @@ export default function SideBar({ visible, onClose }: { visible: boolean, onClos
                   icon={item.icon} 
                   label={item.label} 
                   onPress={item.onPress}
+                  accessibilityLabel={item.label}
+                  // Passando accessibilityRole explicitamente
+                  accessibilityRole={item.accessibilityRole}
                 />
               ))}
             </React.Fragment>
           ))}
         </ScrollView>
         {/* Botão de fechar */}
-        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+        <TouchableOpacity 
+          style={styles.closeButton}
+          onPress={onClose}
+          accessibilityLabel="Fechar menu lateral"
+          accessibilityRole="button"
+        >
           <Text style={styles.closeButtonText}>×</Text>
         </TouchableOpacity>
       </Animated.View>
@@ -157,9 +187,16 @@ export default function SideBar({ visible, onClose }: { visible: boolean, onClos
   );
 }
 
-function SideBarItem({ icon, label, onPress }: { icon: React.ReactNode, label: string, onPress?: () => void }) {
+// Mantendo a definição original do SideBarItem
+function SideBarItem({ icon, label, onPress, accessibilityLabel, accessibilityRole }: 
+  { icon: React.ReactNode, label: string, onPress?: () => void, accessibilityLabel?: string, accessibilityRole?: AccessibilityRole }) {
   return (
-    <TouchableOpacity style={styles.itemRow} onPress={onPress}>
+    <TouchableOpacity 
+      style={styles.itemRow}
+      onPress={onPress}
+      accessibilityLabel={accessibilityLabel || label}
+      accessibilityRole={accessibilityRole || "button"} 
+    >
       {icon}
       <Text style={styles.itemLabel}>{label}</Text>
     </TouchableOpacity>

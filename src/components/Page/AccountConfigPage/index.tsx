@@ -176,6 +176,8 @@ export default function AccountConfigPage() {
                     keyboardType={field.keyboardType}
                     maxLength={field.maxLength}
                     secureTextEntry={field.secureTextEntry}
+                    accessibilityLabel={field.label}
+                    accessibilityRole="text"
                 />
             </View>
         );
@@ -204,7 +206,11 @@ export default function AccountConfigPage() {
                             source={formData.foto ? { uri: formData.foto } : require('../../../assets/Decoration-Paw.png')}
                             style={styles.profilePhoto}
                         />
-                        <TouchableOpacity style={styles.changePhotoButton}>
+                        <TouchableOpacity 
+                            style={styles.changePhotoButton}
+                            accessibilityLabel="Alterar foto de perfil"
+                            accessibilityRole="button"
+                        >
                             <Ionicons name="camera" size={24} color="#7B3FA0" />
                         </TouchableOpacity>
                     </View>
@@ -213,6 +219,9 @@ export default function AccountConfigPage() {
                         <TouchableOpacity 
                             style={[styles.tab, activeSection === 'pessoal' && styles.activeTab]}
                             onPress={() => setActiveSection('pessoal')}
+                            accessibilityLabel="Mostrar seção de dados pessoais"
+                            accessibilityRole="tab"
+                            accessibilityState={{ selected: activeSection === 'pessoal' }}
                         >
                             <Text style={[styles.tabText, activeSection === 'pessoal' && styles.activeTabText]}>
                                 Dados Pessoais
@@ -221,6 +230,9 @@ export default function AccountConfigPage() {
                         <TouchableOpacity 
                             style={[styles.tab, activeSection === 'endereco' && styles.activeTab]}
                             onPress={() => setActiveSection('endereco')}
+                            accessibilityLabel="Mostrar seção de endereço"
+                            accessibilityRole="tab"
+                             accessibilityState={{ selected: activeSection === 'endereco' }}
                         >
                             <Text style={[styles.tabText, activeSection === 'endereco' && styles.activeTabText]}>
                                 Endereço
@@ -256,14 +268,17 @@ export default function AccountConfigPage() {
                     </View>
 
                     <TouchableOpacity 
-                        style={[styles.button, isSaving && styles.buttonDisabled]} 
+                        style={[styles.button, isSaving && styles.buttonDisabled]}
                         onPress={handleSalvar}
                         disabled={isSaving}
+                        accessibilityLabel={isSaving ? "Salvando dados..." : "Botão salvar dados"}
+                        accessibilityRole="button"
+                        accessibilityState={{ busy: isSaving }}
                     >
                         {isSaving ? (
                             <ActivityIndicator color="#FFF" />
                         ) : (
-                            <Text style={styles.buttonText}>Salvar Alterações</Text>
+                            <Text style={styles.buttonText}>Salvar</Text>
                         )}
                     </TouchableOpacity>
                 </View>

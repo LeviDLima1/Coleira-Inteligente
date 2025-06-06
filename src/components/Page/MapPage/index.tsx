@@ -8,6 +8,7 @@ import { Header } from '../../header';
 import { colors } from '@/styles/colors';
 import { useLocalSearchParams } from 'expo-router';
 import { MaterialIcons } from '@expo/vector-icons';
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming, Easing } from 'react-native-reanimated';
 
 interface PetLocation {
   latitude: number;
@@ -46,6 +47,10 @@ const MapPage: React.FC = () => {
   const [showSafeZonesList, setShowSafeZonesList] = useState(false); // Estado para controlar a visibilidade da lista
   const { user } = useAuth();
   const { petId: routePetId } = useLocalSearchParams();
+
+  // Shared values para animações
+  const toggleButtonPress = useSharedValue(0);
+  const safeZonesListVisible = useSharedValue(0);
 
   // Converter petId para número e garantir que seja válido
   const petId = typeof routePetId === 'string' ? parseInt(routePetId, 10) : undefined;
@@ -151,6 +156,26 @@ const MapPage: React.FC = () => {
     }
   }, [petId]);
 
+  // Definições dos estilos animados para o botão e a lista de zonas seguras
+  const toggleButtonAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ scale: withSpring(toggleButtonPress.value ? 0.95 : 1) }],
+      opacity: withSpring(toggleButtonPress.value ? 0.7 : 1),
+    };
+  });
+
+  const safeZonesListAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ translateY: withTiming(safeZonesListVisible.value ? 0 : 200, { duration: 300 }) }],
+      opacity: withTiming(safeZonesListVisible.value ? 1 : 0, { duration: 300 }),
+    };
+  });
+
+  // Atualiza o shared value da lista quando showSafeZonesList muda
+  useEffect(() => {
+    safeZonesListVisible.value = showSafeZonesList ? 1 : 0;
+  }, [showSafeZonesList]);
+
   if (errorMsg) {
     return (
       <View style={styles.container}>
@@ -233,16 +258,20 @@ const MapPage: React.FC = () => {
       )}
 
       {/* Botão para alternar visibilidade da lista de zonas seguras */}
-      <TouchableOpacity
-        style={styles.toggleListButton}
-        onPress={() => setShowSafeZonesList(!showSafeZonesList)}
-      >
-        <Text style={styles.toggleListButtonText}>Zonas Seguras</Text>
-      </TouchableOpacity>
+      <Animated.View style={toggleButtonAnimatedStyle}>
+        <TouchableOpacity
+          style={styles.toggleListButton}
+          onPress={() => setShowSafeZonesList(!showSafeZonesList)}
+          onPressIn={() => { toggleButtonPress.value = 1; }}
+          onPressOut={() => { toggleButtonPress.value = 0; }}
+        >
+          <Text style={styles.toggleListButtonText}>Zonas Seguras</Text>
+        </TouchableOpacity>
+      </Animated.View>
 
       {/* Lista de zonas seguras */}
       {showSafeZonesList && (
-        <View style={styles.safeZonesList}>
+        <Animated.View style={[styles.safeZonesList, safeZonesListAnimatedStyle]}>
           <Text style={styles.safeZonesTitle}>Zonas Seguras</Text>
           {safeZones.map((zone) => (
             <View key={zone.id} style={styles.safeZoneItem}>
@@ -258,7 +287,7 @@ const MapPage: React.FC = () => {
           {safeZones.length === 0 && (
             <Text style={styles.noZonesText}>Nenhuma zona segura cadastrada.</Text>
           )}
-        </View>
+        </Animated.View>
       )}
 
       {/* Seção de Informações do Pet */}

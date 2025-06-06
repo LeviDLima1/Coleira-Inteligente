@@ -1,10 +1,13 @@
-import { ActivityIndicator } from 'react-native';
+import { ActivityIndicator, View, Text } from 'react-native';
 import { styles } from './styles';
 import { colors } from '@/styles/theme';
 
-export function Loading() {
+export function Loading({ message = 'Carregando...' }) {
     return (
-        <ActivityIndicator color={colors.purple[500]} style={styles.container}/>
+        <View style={styles.container}>
+            <ActivityIndicator color={colors.purple[500]} size="large" />
+            <Text style={styles.message}>{message}</Text>
+        </View>
     );
 }
 

@@ -30,9 +30,23 @@ export default function SliderItem({item, index, scrollX}: Props) {
                         [0.6, 1, 0.6],
                         Extrapolation.CLAMP
                     )
+                },
+                {
+                    rotate: `${interpolate(
+                        scrollX.value,
+                        [(index - 1) * width, index * width, (index + 1) * width],
+                        [-10, 0, 10],
+                        Extrapolation.CLAMP
+                    )}deg`
                 }
-            ]
-        }
+            ],
+            opacity: interpolate(
+                scrollX.value,
+                [(index - 1) * width, index * width, (index + 1) * width],
+                [0.5, 1, 0.5],
+                Extrapolation.CLAMP
+            )
+        } as any
     })
 
     return (

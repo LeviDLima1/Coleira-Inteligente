@@ -57,6 +57,12 @@ export default function PetRegistrationPage() {
     const scale = useSharedValue(1);
     const rotate = useSharedValue(0);
 
+    const petNameInputFocused = useSharedValue(0);
+    const ageInputFocused = useSharedValue(0);
+
+    const petTypePickerFocused = useSharedValue(0);
+    const breedPickerFocused = useSharedValue(0);
+
     const pickImage = async () => {
         try {
             console.log('Iniciando seleção de imagem...');
@@ -161,6 +167,37 @@ export default function PetRegistrationPage() {
         };
     });
 
+    const petNameInputAnimatedStyle = useAnimatedStyle(() => {
+        return {
+          borderColor: withSpring(petNameInputFocused.value ? colors.purple[500] : styles.input.borderColor),
+        };
+      });
+    
+    const ageInputAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            borderColor: withSpring(ageInputFocused.value ? colors.purple[500] : styles.input.borderColor),
+        };
+    });
+
+    const petTypePickerAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            borderColor: withSpring(petTypePickerFocused.value ? colors.purple[500] : styles.pickerContainer.borderColor),
+        };
+    });
+
+    const breedPickerAnimatedStyle = useAnimatedStyle(() => {
+        return {
+            borderColor: withSpring(breedPickerFocused.value ? colors.purple[500] : styles.pickerContainer.borderColor),
+        };
+    });
+
+    const buttonAnimatedStyle = useAnimatedStyle(() => {
+        return {
+          transform: [{ scale: withSpring(isLoading ? 0.95 : 1) }],
+          opacity: withSpring(isLoading ? 0.7 : 1)
+        };
+      });
+
     return (
         <ScrollView style={styles.container}>
             <View style={styles.formContainer}>
@@ -178,17 +215,22 @@ export default function PetRegistrationPage() {
                 </AnimatedTouchableOpacity>
 
                 <Animated.View entering={FadeInUp.delay(200).springify()}>
-                    <TextInput
-                        style={styles.input}
-                        placeholder="Nome do Pet"
-                        value={petName}
-                        onChangeText={setPetName}
-                    />
+                    <Animated.View style={[styles.input, petNameInputAnimatedStyle]}>
+                        <TextInput
+                            style={{ flex: 1, padding: 0 }}
+                            placeholder="Nome do Pet"
+                            value={petName}
+                            onChangeText={setPetName}
+                            onFocus={() => { petNameInputFocused.value = 1; }}
+                            onBlur={() => { petNameInputFocused.value = 0; }}
+                            accessibilityLabel="Campo de texto para o nome do pet"
+                            accessibilityRole="text"
+                        />
+                    </Animated.View>
                 </Animated.View>
 
                 {/* Picker Tipo de Pet */}
-                <Animated.View entering={FadeInUp.delay(400).springify()} style={styles.pickerContainer}> {/* Mantendo Animated.View e pickerContainer */}
-                   {/* Mantendo uma View simples ao redor do picker */}
+                <Animated.View entering={FadeInUp.delay(400).springify()} style={[styles.pickerContainer, petTypePickerAnimatedStyle]}>
                    <View>
                         <RNPickerSelect
                             onValueChange={(value) => {
@@ -198,58 +240,79 @@ export default function PetRegistrationPage() {
                             items={petTypes}
                             placeholder={{ label: 'Selecione o tipo', value: null, color: colors.gray[400] }}
                             value={petType}
-                            style={simplePickerSelectStyles} // Usando estilos simplificados
+                            style={simplePickerSelectStyles}
                             useNativeAndroidPickerStyle={false} 
+                            onOpen={() => { petTypePickerFocused.value = 1; }}
+                            onClose={() => { petTypePickerFocused.value = 0; }}
                         />
                    </View>
                 </Animated.View>
 
                 {/* Picker Raça */}
                 {petType !== '' && (
-                    <Animated.View entering={FadeInUp.delay(600).springify()} style={styles.pickerContainer}> {/* Mantendo Animated.View e pickerContainer */}
-                         {/* Mantendo uma View simples ao redor do picker */}
-                        <View>
+                    <Animated.View 
+                        entering={FadeInUp.delay(600).springify()}
+                        style={[styles.pickerContainer, breedPickerAnimatedStyle]}
+                    >
+                         <View>
                             <RNPickerSelect
                                 onValueChange={(value) => setBreed(value)}
                                 items={petType === 'dog' ? dogBreeds : catBreeds}
                                 placeholder={{ label: 'Selecione a raça', value: null, color: colors.gray[400] }}
                                 value={breed}
-                                style={simplePickerSelectStyles} // Usando estilos simplificados
+                                style={simplePickerSelectStyles}
                                 useNativeAndroidPickerStyle={false}
+                                onOpen={() => { breedPickerFocused.value = 1; }}
+                                onClose={() => { breedPickerFocused.value = 0; }}
                             />
-                        </View>
+                         </View>
                     </Animated.View>
                 )}
 
                 {breed === 'Outro' && (
-                    <Animated.View entering={FadeInUp.delay(800).springify()}>
+                    <Animated.View 
+                        entering={FadeInUp.delay(800).springify()}
+                    >
                         <TextInput
                             style={styles.input}
                             placeholder="Digite a raça"
                             value={otherBreed}
                             onChangeText={setOtherBreed}
+                            accessibilityLabel="Campo para digitar outra raça"
+                            accessibilityRole="text"
                         />
                     </Animated.View>
                 )}
 
-                <Animated.View entering={FadeInUp.delay(1000).springify()}>
+                <Animated.View 
+                    entering={FadeInUp.delay(1000).springify()}
+                    style={[styles.input, ageInputAnimatedStyle]}
+                >
                     <TextInput
-                        style={styles.input}
+                        style={{ flex: 1, padding: 0 }}
                         placeholder="Idade do Pet"
                         value={age}
                         onChangeText={setAge}
                         keyboardType="numeric"
+                        accessibilityLabel="Campo de texto para idade do pet"
+                        accessibilityRole="text"
                     />
                 </Animated.View>
 
-                <Animated.View entering={FadeInUp.delay(1200).springify()}>
+                <Animated.View 
+                    entering={FadeInUp.delay(1200).springify()}
+                    style={buttonAnimatedStyle}
+                >
                     <TouchableOpacity
                         style={[styles.button, isLoading && styles.buttonDisabled]} 
                         onPress={handleSubmit}
                         disabled={isLoading}
+                        accessibilityLabel={isLoading ? "Cadastrando pet..." : "Botão cadastrar pet"}
+                        accessibilityRole="button"
+                        accessibilityState={{ busy: isLoading }}
                     >
                         {isLoading ? (
-                            <ActivityIndicator color={colors.white} />
+                            <ActivityIndicator color="#FFF" />
                         ) : (
                             <Text style={styles.buttonText}>Cadastrar Pet</Text>
                         )}

@@ -13,7 +13,7 @@ interface User {
 interface AuthContextData {
   user: User | null;
   loading: boolean;
-  signIn: (userData: User, token: string) => Promise<void>;
+  signIn: (userData: User, token?: string) => Promise<void>;
   signOut: () => Promise<void>;
 }
 
@@ -44,11 +44,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
-  async function signIn(userData: User, token: string) {
+  async function signIn(userData: User, token?: string) {
     try {
+      const tokenPromise = token ? AsyncStorage.setItem('token', token) : Promise.resolve();
+
       await Promise.all([
         AsyncStorage.setItem('user', JSON.stringify(userData)),
-        AsyncStorage.setItem('token', token)
+        tokenPromise
       ]);
       setUser(userData);
     } catch (error) {
