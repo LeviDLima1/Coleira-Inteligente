@@ -260,33 +260,24 @@ export default function PetRegistrationPage() {
     );
 }
 
-// Estilos simplificados para o react-native-picker-select (DEBUG)
-const simplePickerSelectStyles = StyleSheet.create({
+// Estilos para o react-native-picker-select
+const simplePickerSelectStyles = {
     inputIOS: {
         fontSize: 16,
-        paddingVertical: 12, // Restaurando padding vertical
+        paddingVertical: 12,
         paddingHorizontal: 10,
         color: colors.gray[800],
-        paddingRight: 30, 
-        height: 50, 
-        justifyContent: 'center', 
+        paddingRight: 30,
     },
     inputAndroid: {
         fontSize: 16,
-        paddingVertical: 8, // Restaurando padding vertical original do android
+        paddingVertical: 8,
         paddingHorizontal: 10,
         color: colors.gray[800],
-        paddingRight: 30, 
-        height: 50, 
-        justifyContent: 'center', 
+        paddingRight: 30,
     },
-     placeholder: {
+    placeholder: {
         color: colors.gray[400],
-        fontSize: 16,
-    },
-    iconContainer: {
-        top: 15, 
-        right: 15,
-    },
-});
+    }
+};
 

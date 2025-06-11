@@ -68,6 +68,7 @@ export default function PetSlide({ pets }: PetSlideProps) {
             <View style={styles.petTextContainer}>
               <Text style={styles.nome}>{pet.nome}</Text>
               <Text style={styles.status}>{pet.status || 'Status desconhecido'}</Text>
+              <Text style={styles.id}>ID: {pet.id}</Text>
             </View>
           </View>
 

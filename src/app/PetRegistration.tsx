@@ -1,30 +1,18 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Stack } from 'expo-router';
 import PetRegistrationPage from "../components/Page/PetRegistrationPage";
 import { Header } from '../components/header';
 import { View, Text, StyleSheet } from 'react-native';
 import { colors } from '../styles/colors';
-import SideBar from '../components/Page/HomePage/SideBar';
 
 export default function PetRegistration() {
-    const [isSideBarVisible, setIsSideBarVisible] = useState(false);
-
-    const handleOpenSideBar = () => {
-        setIsSideBarVisible(true);
-    };
-
-    const handleCloseSideBar = () => {
-        setIsSideBarVisible(false);
-    };
-
     return (
         <View style={styles.container}>
-            <Header onMenuPress={handleOpenSideBar} />
+            <Header />
             <View style={styles.titleContainer}>
                 <Text style={styles.title}>Cadastro do Pet</Text>
             </View>
             <PetRegistrationPage />
-            {isSideBarVisible && <SideBar visible={isSideBarVisible} onClose={handleCloseSideBar} />}
         </View>
     );
 }

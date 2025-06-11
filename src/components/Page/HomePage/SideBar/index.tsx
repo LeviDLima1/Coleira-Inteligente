@@ -16,19 +16,75 @@ export default function SideBar({ visible, onClose }: { visible: boolean, onClos
     {
       title: "Serviços",
       items: [
-        { icon: <Ionicons name="home-outline" size={22} color="#7B3FA0" />, label: "Início / Dashboard" },
-        { icon: <Ionicons name="map-outline" size={22} color="#7B3FA0" />, label: "Mapa de Rastreamento" },
-        { icon: <FontAwesome5 name="dog" size={22} color="#7B3FA0" />, label: "Meus Pets" },
-        { icon: <Feather name="credit-card" size={22} color="#7B3FA0" />, label: "Meus Planos" },
-        { icon: <MaterialIcons name="add-shopping-cart" size={22} color="#7B3FA0" />, label: "Contratar Plano" },
+        { 
+          icon: <Ionicons name="home-outline" size={22} color="#7B3FA0" />, 
+          label: "Início / Dashboard",
+          onPress: () => {
+            router.push('/');
+            onClose();
+          }
+        },
+        { 
+          icon: <Ionicons name="map-outline" size={22} color="#7B3FA0" />, 
+          label: "Mapa de Rastreamento",
+          onPress: () => {
+            router.push('/map');
+            onClose();
+          }
+        },
+        { 
+          icon: <FontAwesome5 name="dog" size={22} color="#7B3FA0" />, 
+          label: "Meus Pets",
+          onPress: () => {
+            router.push('/MeusPets');
+            onClose();
+          }
+        },
+        { 
+          icon: <Feather name="credit-card" size={22} color="#7B3FA0" />, 
+          label: "Meus Planos",
+          onPress: () => {
+            // Implementar navegação para Meus Planos
+            onClose();
+          }
+        },
+        { 
+          icon: <MaterialIcons name="add-shopping-cart" size={22} color="#7B3FA0" />, 
+          label: "Contratar Plano",
+          onPress: () => {
+            // Implementar navegação para Contratar Plano
+            onClose();
+          }
+        },
       ]
     },
     {
       title: "Funcionalidades",
       items: [
-        { icon: <MaterialIcons name="center-focus-weak" size={22} color="#7B3FA0" />, label: "Área Segura" },
-        { icon: <Ionicons name="time-outline" size={22} color="#7B3FA0" />, label: "Histórico de Localizações" },
-        { icon: <MaterialIcons name="warning-amber" size={22} color="#7B3FA0" />, label: "Alertas de Fuga" },
+        { 
+          icon: <MaterialIcons name="center-focus-weak" size={22} color="#7B3FA0" />, 
+          label: "Área Segura",
+          onPress: () => {
+            // Implementar navegação para Área Segura
+            onClose();
+          }
+        },
+        { 
+          icon: <Ionicons name="time-outline" size={22} color="#7B3FA0" />, 
+          label: "Histórico de Localizações",
+          onPress: () => {
+            // Implementar navegação para Histórico
+            onClose();
+          }
+        },
+        { 
+          icon: <MaterialIcons name="warning-amber" size={22} color="#7B3FA0" />, 
+          label: "Alertas de Fuga",
+          onPress: () => {
+            // Implementar navegação para Alertas
+            onClose();
+          }
+        },
       ]
     },
     {
@@ -51,16 +107,14 @@ export default function SideBar({ visible, onClose }: { visible: boolean, onClos
 
   React.useEffect(() => {
     if (visible) {
-      Animated.timing(slideAnim, {
+      Animated.spring(slideAnim, {
         toValue: 0,
-        duration: 300,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }).start();
     } else {
-      Animated.timing(slideAnim, {
+      Animated.spring(slideAnim, {
         toValue: width,
-        duration: 300,
-        useNativeDriver: false,
+        useNativeDriver: true,
       }).start();
     }
   }, [visible]);

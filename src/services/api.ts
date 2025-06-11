@@ -8,7 +8,7 @@ const getBaseUrl = () => {
   // Em desenvolvimento, use o IP local
   if (__DEV__) {
     // Use o mesmo IP para todas as plataformas
-    return 'http://192.168.18.31:3000/api';
+    return 'http://192.168.1.2:3000/api';
   }
   // Em produção, use a URL do servidor
   return 'https://seu-servidor.com/api';
@@ -16,27 +16,36 @@ const getBaseUrl = () => {
 
 const api = axios.create({
   baseURL: getBaseUrl(),
-  timeout: 5000,
+  timeout: 15000, // Aumentando o timeout para 15 segundos
+  headers: {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
+  }
 });
 
 // Interceptor para adicionar o token em todas as requisições
 api.interceptors.request.use(
   async (config) => {
-    console.log('🚀 Requisição sendo enviada:', {
-      url: config.url,
-      method: config.method,
-      data: config.data,
-      headers: config.headers
-    });
+    try {
+      console.log('🚀 Requisição sendo enviada:', {
+        url: config.url,
+        method: config.method,
+        data: config.data,
+        headers: config.headers
+      });
 
-    const token = await AsyncStorage.getItem('token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-      console.log('🔑 Token adicionado à requisição');
-    } else {
-      console.log('⚠️ Nenhum token encontrado');
+      const token = await AsyncStorage.getItem('token');
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+        console.log('🔑 Token adicionado à requisição');
+      } else {
+        console.log('⚠️ Nenhum token encontrado');
+      }
+      return config;
+    } catch (error) {
+      console.error('❌ Erro ao preparar requisição:', error);
+      return Promise.reject(error);
     }
-    return config;
   },
   (error) => {
     console.error('❌ Erro na requisição:', error);
@@ -55,6 +64,16 @@ api.interceptors.response.use(
     return response;
   },
   async (error) => {
+    if (error.code === 'ECONNABORTED') {
+      console.error('❌ Timeout na requisição');
+      return Promise.reject(new Error('O servidor demorou muito para responder. Verifique sua conexão.'));
+    }
+
+    if (!error.response) {
+      console.error('❌ Erro de rede:', error.message);
+      return Promise.reject(new Error('Não foi possível conectar ao servidor. Verifique sua conexão.'));
+    }
+
     console.error('❌ Erro na resposta:', {
       message: error.message,
       status: error.response?.status,
